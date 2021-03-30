@@ -57,11 +57,11 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     final url = Uri.https(
-        'test-shop-6a886-default-rtdb.firebaseio.com', '/products.json');
+        'test-shop-6a886-default-rtdb.firebaseio.com', '/products');
 
-    http
+  return http
         .post(url,
             body: json.encode({
               'title': product.title,
@@ -79,7 +79,10 @@ class Products with ChangeNotifier {
           id: json.decode(value.body)['name']);
       _items.add(newProduct);
       notifyListeners();
-    });
+    }
+  ).catchError((error){
+throw error;
+  });
   }
 
   void updateProduct(String id, Product newProduct) {
